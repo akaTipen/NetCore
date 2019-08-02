@@ -1,0 +1,58 @@
+﻿@model IEnumerable<AspCore.Data.EmployeesViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<main role="main" class="pb-3" id="employee">
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>@Html.DisplayNameFor(model => model.EmployeeName)</th>
+                <th>@Html.DisplayNameFor(model => model.JoinDate)</th>
+                <th>@Html.DisplayNameFor(model => model.Height)</th>
+                <th>@Html.DisplayNameFor(model => model.Weight)</th>
+                <th>@Html.DisplayNameFor(model => model.DepartmentName)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <!--ko if: employeeList().length > 0-->
+        <tbody data-bind="foreach: employeeList">
+            <tr>
+                <td scope="row" data-bind="text:(($root.pageNumber()-1)*10)+$index()+1"></td>
+                <td data-bind="text: employeeName"></td>
+                <td data-bind="text: joinDate"></td>
+                <td data-bind="text: height"></td>
+                <td data-bind="text: weight"></td>
+                <td data-bind="text: departmentName"></td>
+                <td style="white-space:nowrap">
+                    <a href="#" data-bind="attr: {href: $.rootDir + employeeId()}" title="Edit"><i class="fa fa-edit"></i></a>
+                    <a href="#" data-bind="attr: {href: $.rootDir + employeeId()}" title="Delete"><i class="fa fa-trash"></i></a>
+                </td>
+            </tr>
+        </tbody>
+        <!-- /ko -->
+    </table>
+    <div class="text-center">
+        <ul class="pagination">
+            <li class="page-item"><a href="#" class="page-link" data-bind="click: prevTenPage">&laquo;</a></li>
+            <li class="page-item"><a href="#" class="page-link" data-bind="click: prevPage">&lsaquo;</a></li>
+            <!-- ko foreach: selectedPages -->
+            <li class="page-item" data-bind="css: { 'active' : $data==$parent.pageNumber() }"><a href="#" class="page-link" data-bind="text: $data, click: $parent.gotoPage"></a></li>
+            <!-- /ko -->
+            <li class="page-item"><a href="#" class="page-link" data-bind="click: nextPage">&rsaquo;</a></li>
+            <li class="page-item"><a href="#" class="page-link" data-bind="click: nextTenPage">&raquo;</a></li>
+        </ul>
+    </div>
+</main>
+
+@section Scripts{
+    <script src="~/js/EmployeeList.js"></script>
+}
