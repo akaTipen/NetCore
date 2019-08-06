@@ -11,31 +11,39 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
+        <form asp-action="@Model == null ? Create : Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="EmployeeId" />
             <div class="form-group">
                 <label asp-for="EmployeeName" class="control-label"></label>
-                <input asp-for="EmployeeName" class="form-control" />
+                <input asp-for="EmployeeName" class="form-control" required />
                 <span asp-validation-for="EmployeeName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="JoinDate" class="control-label"></label>
-                <input type="text" asp-for="JoinDate" class="form-control datepicker" />
+                <input type="text" asp-for="JoinDate" class="form-control datepicker" required />
                 <span asp-validation-for="JoinDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Height" class="control-label"></label>
-                <input type="number" asp-for="Height" class="form-control" />
+                <input type="number" asp-for="Height" class="form-control" required />
                 <span asp-validation-for="Height" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Weight" class="control-label"></label>
-                <input type="number" asp-for="Weight" class="form-control" />
+                <input type="number" asp-for="Weight" class="form-control" required />
                 <span asp-validation-for="Weight" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="SendPhoto" class="control-label"></label>
-                <input type="file" asp-for="SendPhoto" class="form-control" />
+                @if (@Model == null)
+                {
+                    <input type="file" asp-for="SendPhoto" required />
+                }
+                else
+                {
+                    <input type="file" asp-for="SendPhoto" />
+                }
                 <span asp-validation-for="SendPhoto" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -44,7 +52,7 @@
                 <span asp-validation-for="DepartmentId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value='@(Model == null ? "Create" : "Edit")' class="btn btn-primary" />
             </div>
         </form>
     </div>

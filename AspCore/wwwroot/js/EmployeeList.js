@@ -72,6 +72,10 @@
                 self.gotoPage(self.pageNumber() + 10);
             }
         };     
+
+        self.GetClientReport = function (data, event) {
+            window.open('/Employees/GetReport/' + data.employeeId(), "_blank");
+        }
     };
 
     EmployeeViewModel = new EmployeeViewModel();

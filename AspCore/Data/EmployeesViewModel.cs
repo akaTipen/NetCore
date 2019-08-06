@@ -20,8 +20,9 @@ namespace AspCore.Data
         public IFormFile SendPhoto { get; set; }
         public decimal? Height { get; set; }
         public double? Weight { get; set; }
-        public int DepartmentId { get; set; }
         [DisplayName("Department")]
+        public int DepartmentId { get; set; }
+        [DisplayName("Department Name")]
         public string DepartmentName { get; set; }
     }
 }

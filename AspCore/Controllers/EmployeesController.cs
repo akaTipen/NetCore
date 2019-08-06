@@ -126,13 +126,28 @@ namespace AspCore.Controllers
             {
                 return NotFound();
             }
-            return View(employee);
+
+            var DepartementList = _context.Departments.Select(a => new { a.DepartmentId, a.DepartmenName }).ToList();
+            List<SelectListItem> DepartementListItem = new SelectList(DepartementList, "DepartmentId", "DepartmenName").ToList();
+            ViewBag.DepartementListItem = DepartementListItem;
+
+            EmployeesViewModel temp = new EmployeesViewModel
+            {
+                EmployeeId = employee.EmployeeId,
+                EmployeeName = employee.EmployeeName,
+                JoinDate = convertDate(employee.JoinDate),
+                Weight = employee.Weight,
+                Height = employee.Height,
+                DepartmentId = employee.DepartmentId
+            };
+
+            return View("Create", temp);
         }
 
         // POST: Employees/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Employees employee)
+        public async Task<IActionResult> Edit(int id, EmployeesViewModel employee)
         {
             if (id != employee.EmployeeId)
             {
@@ -143,7 +158,26 @@ namespace AspCore.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
+                    byte[] fileBytes = null;
+                    if (employee.SendPhoto != null)
+                    {
+                        using (var ms = new MemoryStream())
+                        {
+                            employee.SendPhoto.CopyTo(ms);
+                            fileBytes = ms.ToArray();
+                        }
+                    }
+
+                    Employees model = _context.Employees.Find(employee.EmployeeId);
+                    model.EmployeeId = employee.EmployeeId;
+                    model.EmployeeName = employee.EmployeeName;
+                    model.JoinDate = convertDate(employee.JoinDate);
+                    model.Weight = employee.Weight;
+                    model.Height = employee.Height;
+                    if (employee.Photo != null)
+                        model.Photo = fileBytes;
+                    model.DepartmentId = employee.DepartmentId;
+                    _context.Update(model);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -159,24 +193,6 @@ namespace AspCore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
-        }
-
-        // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
             return View(employee);
         }
 
@@ -196,12 +212,18 @@ namespace AspCore.Controllers
             return _context.Employees.Any(e => e.EmployeeId == id);
         }
 
+        public FileResult GetReport(int Id)
+        {
+            Employees model = _context.Employees.Find(Id);
+            return File(model.Photo, "application/pdf");
+        }
+
         #region helper
         private string convertDate(DateTime? param)
         {
             DateTime result = (DateTime)param;
             string[] ValSplit = param.ToString().Substring(0, 10).Split('/');
-            string split = result.Day + "-" + result.Month + "-" + result.Year;
+            string split = result.Day.ToString("D2") + "/" + result.Month.ToString("D2") + "/" + result.Year.ToString("D2");
             return split;
         }
 
@@ -209,7 +231,7 @@ namespace AspCore.Controllers
         {
             string[] ValSplit = param.ToString().Substring(0, 10).Split('/');
             DateTime result = new DateTime(Convert.ToInt32(ValSplit[2]), Convert.ToInt32(ValSplit[1]), Convert.ToInt32(ValSplit[0]));
-            
+
             return result;
         }
         #endregion
