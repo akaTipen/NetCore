@@ -30,13 +30,13 @@
                 <td scope="row" data-bind="text:(($root.pageNumber()-1)*10)+$index()+1"></td>
                 <td data-bind="text: employeeName"></td>
                 <td data-bind="text: joinDate"></td>
-                <td><a href="#" data-bind="click: $root.GetClientReport">download document</a></td>
+                <td><a href="#" data-bind="click: $root.GetClientReport" title="Download Document">download document</a></td>
                 <td data-bind="text: height"></td>
                 <td data-bind="text: weight"></td>
                 <td data-bind="text: departmentName"></td>
                 <td style="white-space:nowrap">
                     <a href="#" data-bind="attr: {href: $.rootDir + 'Employees/Edit/' + employeeId()}" title="Edit"><i class="fa fa-edit"></i></a>
-                    <a href="#" data-bind="attr: {href: $.rootDir + 'Employees/DeleteConfirmed/' + employeeId()}" title="Delete"><i class="fa fa-trash"></i></a>
+                    <a href="#" data-bind="click: $root.deleteData" title="Delete"><i class="fa fa-trash"></i></a>
                 </td>
             </tr>
         </tbody>

@@ -198,13 +198,19 @@ namespace AspCore.Controllers
 
         // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public JsonResult DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                var employee = _context.Employees.Find(id);
+                _context.Employees.Remove(employee);
+                _context.SaveChanges();
+                return Json(new { message = "berhasil" });
+            }
+            catch(Exception ex){
+                return Json(new { message = ex.Message });
+            }
+            
         }
 
         private bool EmployeeExists(int id)

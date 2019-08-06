@@ -76,6 +76,16 @@
         self.GetClientReport = function (data, event) {
             window.open('/Employees/GetReport/' + data.employeeId(), "_blank");
         }
+
+        self.deleteData = function (data, event) {
+            $.ajax("/Employees/Delete/" + data.employeeId(), {
+                type: "POST", contentType: "application/json",
+                success: function (result) {
+                    console.log(result.message);
+                    self.getList();
+                }
+            });
+        };
     };
 
     EmployeeViewModel = new EmployeeViewModel();
